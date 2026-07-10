@@ -42,7 +42,7 @@ require __DIR__ . '/includes/header.php';
 
   <!-- ============================= TRUST STRIP ============================= -->
   <section class="trust">
-    <div class="container trust-grid">
+    <div class="container trust-grid stagger">
       <div class="trust-item reveal">
         <?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4.5 8-11.8A8 8 0 0 0 4 10.2C4 17.5 12 22 12 22z"/><path d="M12 15a4 4 0 0 0 4-4c-2.5 0-4 1-4 4z"/></svg>'); ?>
         <div><h4>Pure &amp; Plant-Based</h4><p>No fillers, only real hing resin.</p></div>
@@ -91,12 +91,12 @@ require __DIR__ . '/includes/header.php';
               <span class="qty-val">1</span>
               <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>
             </div>
-            <button class="btn btn-primary add-to-cart" data-name="<?php echo htmlspecialchars($featured['name']); ?>">Add To Cart</button>
+            <button class="btn btn-primary add-to-cart" data-name="<?php echo htmlspecialchars($featured['name']); ?>" data-price="<?php echo $featured['price']; ?>" data-color="<?php echo htmlspecialchars($featured['jar_color']); ?>" data-weight="<?php echo htmlspecialchars($featured['weight']); ?>">Add To Cart</button>
           </div>
         </div>
       </div>
 
-      <div class="product-grid">
+      <div class="product-grid stagger">
         <?php foreach ($others as $p): ?>
         <div class="product-card reveal">
           <span class="tag"><?php echo htmlspecialchars($p['badge']); ?></span>
@@ -111,6 +111,40 @@ require __DIR__ . '/includes/header.php';
     </div>
   </section>
 
+  <!-- ============================= PROVENANCE / PROCESS ============================= -->
+  <section class="section provenance" id="story">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Our Process</span>
+        <h2>From Resin To Jar, Nothing Rushed</h2>
+        <p>Bandhani hing isn't a shortcut spice — it's a craft passed down through generations of blenders. Here's what actually goes into the jar.</p>
+      </div>
+
+      <div class="process-row stagger">
+        <div class="process-step reveal">
+          <span class="process-num">01</span>
+          <h3>Sourced At The Root</h3>
+          <p>Resin tapped from Ferula roots grown in the cold highlands where the plant's aroma is strongest — the only place real hing comes from.</p>
+        </div>
+        <div class="process-step reveal">
+          <span class="process-num">02</span>
+          <h3>Cut The Bandhani Way</h3>
+          <p>Aged resin is blended by hand using the traditional Rajasthani method — just enough carrier, never stretched further to cut cost.</p>
+        </div>
+        <div class="process-step reveal">
+          <span class="process-num">03</span>
+          <h3>Stone-Ground, Small Batch</h3>
+          <p>Milled in batches small enough that no jar sits waiting in a warehouse losing its aroma before it reaches you.</p>
+        </div>
+        <div class="process-step reveal">
+          <span class="process-num">04</span>
+          <h3>Sealed At Peak Aroma</h3>
+          <p>Packed within days of grinding, so what opens in your kitchen is as strong as the day it was milled.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============================= BENEFITS ============================= -->
   <section class="section benefits" id="benefits">
     <div class="container">
@@ -119,7 +153,7 @@ require __DIR__ . '/includes/header.php';
         <h2>Good For The Pot. Good For The Gut.</h2>
         <p>Hing has been a staple of Indian digestion-friendly cooking for generations — here's what a pinch is actually doing.</p>
       </div>
-      <div class="benefit-grid">
+      <div class="benefit-grid stagger">
         <div class="benefit-item reveal">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3a5 5 0 0 0-5 5c0 6 5 8 9 13 4-5 9-7 9-13a5 5 0 0 0-8-4"/></svg>
           <h4>Improves Digestive Health</h4>
@@ -173,7 +207,7 @@ require __DIR__ . '/includes/header.php';
         <span class="eyebrow">From Real Kitchens</span>
         <h2>What Home Cooks Are Saying</h2>
       </div>
-      <div class="testi-grid">
+      <div class="testi-grid stagger">
         <div class="testi-card reveal">
           <?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.5 9.5C7.5 7 9 5.5 11.5 5.5v2c-1.4 0-2 .7-2 1.8h2V13H7.5V9.5zm8 0c0-2.5 1.5-4 4-4v2c-1.4 0-2 .7-2 1.8h2V13h-4V9.5z"/></svg>', 4); ?>
           <p>"The aroma hits the second the lid opens. I've cut the quantity I use in half compared to my old brand."</p>

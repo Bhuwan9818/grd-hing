@@ -73,6 +73,23 @@
   </div>
 </footer>
 
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button class="cart-close" id="cartClose" aria-label="Close cart">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <!-- populated by js/main.js -->
+  </div>
+  <div class="cart-foot">
+    <div class="cart-subtotal"><span>Subtotal</span><b id="cartSubtotal">₹0</b></div>
+    <button class="btn btn-primary" id="cartCheckout" type="button">Checkout</button>
+  </div>
+</aside>
+
 <div class="toast" id="toast">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
   <span id="toastMsg">Added to cart</span>
