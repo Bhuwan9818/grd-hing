@@ -1,0 +1,83 @@
+<section class="section" style="padding-top:0; padding-bottom:0;">
+  <div class="container">
+    <div class="cta-band reveal">
+      <span class="eyebrow" style="color:var(--turmeric);">Stay Stocked</span>
+      <h2 style="margin-top:14px;">Get 10% Off Your First Jar</h2>
+      <p>Join the G.R.D kitchen list for restock alerts, recipes, and launch-day offers on new spices.</p>
+      <form class="cta-form" id="newsletterForm">
+        <input type="email" placeholder="you@email.com" required aria-label="Email address">
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+      <p class="cta-note">No spam. Just good food and the occasional discount.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-brand">
+          <img src="images/logo.png" alt="G.R.D Hing emblem">
+          <span>G.R.D Hing</span>
+        </div>
+        <p class="desc">Bandhani hing churan, ground the way it's always been — pure, plant-based, and strong enough to matter with just a pinch.</p>
+        <div class="footer-social">
+          <a href="#" class="icon-btn" aria-label="Instagram" style="border-color:rgba(243,231,208,0.25);color:var(--parchment-lt);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="icon-btn" aria-label="Facebook" style="border-color:rgba(243,231,208,0.25);color:var(--parchment-lt);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="icon-btn" aria-label="WhatsApp" style="border-color:rgba(243,231,208,0.25);color:var(--parchment-lt);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5>Shop</h5>
+        <ul>
+          <li><a href="#shop">Hing Churan</a></li>
+          <li><a href="#shop">Turmeric Powder</a></li>
+          <li><a href="#shop">Chilli Powder</a></li>
+          <li><a href="#shop">All Products</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#benefits">Benefits</a></li>
+          <li><a href="#kitchen">Recipes</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Help</h5>
+        <ul>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; <?php echo date('Y'); ?> G.R.D Hing. All rights reserved.</span>
+      <span>Made with care in Delhi NCR, India.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastMsg">Added to cart</span>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
