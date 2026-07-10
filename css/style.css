@@ -549,11 +549,13 @@ input{ font-family:inherit; }
 @media (max-width:640px){
   .container{ padding:0 20px; }
   .section{ padding:64px 0; }
-  .product-grid{ grid-template-columns:repeat(2,1fr); gap:16px; }
+  .product-grid{ grid-template-columns:1fr; gap:16px; }
   .product-card{ padding:18px; }
   .hero-stats{ gap:22px; }
+  .trust-grid{ grid-template-columns:1fr; gap:22px; }
   .cta-band{ padding:44px 26px; margin:0 20px; }
   .footer-grid{ grid-template-columns:1fr; }
+  .benefit-grid{ grid-template-columns:1fr; }
   .footer-bottom{ flex-direction:column; align-items:flex-start; }
   .process-row{ grid-template-columns:1fr; row-gap:32px; }
 }
