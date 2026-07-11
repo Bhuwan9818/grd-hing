@@ -21,21 +21,33 @@ function grd_seal($icon_svg = '', $studs = 6) {
 }
 
 /**
- * Renders a small CSS/HTML jar illustration for dummy products that
- * don't yet have real product photography — keeps every card visually
- * consistent with the real jar's silhouette (white body, coloured
- * label, gold-toned lid) until real photos are uploaded.
+ * Renders one product card — used on the homepage shop grid and on
+ * product.php's "You Might Also Like" section, so both stay in sync
+ * automatically instead of maintaining two copies of this markup.
  */
-function grd_jar_illustration($jar_color, $label_text) {
+function grd_product_card($p) {
     ob_start();
     ?>
-    <div class="jar-illustration" aria-hidden="true">
-      <div class="jar-lid" style="background:linear-gradient(180deg,#E7BD6B,var(--turmeric-dp));"></div>
-      <div class="jar-body">
-        <div class="jar-label" style="background:<?php echo htmlspecialchars($jar_color); ?>;">
-          <?php echo htmlspecialchars($label_text); ?>
+    <div class="product-card reveal">
+      <span class="tag"><?php echo htmlspecialchars($p['badge']); ?></span>
+      <a href="product.php?id=<?php echo urlencode($p['id']); ?>" class="product-thumb-link">
+        <div class="product-thumb">
+          <img src="<?php echo htmlspecialchars($p['image']); ?>" alt="<?php echo htmlspecialchars($p['name']); ?> — <?php echo htmlspecialchars($p['weight']); ?>" loading="lazy">
         </div>
-      </div>
+      </a>
+      <a href="product.php?id=<?php echo urlencode($p['id']); ?>" class="product-card-title">
+        <h4><?php echo htmlspecialchars($p['name']); ?></h4>
+      </a>
+      <p class="p-tag"><?php echo htmlspecialchars($p['tagline']); ?></p>
+      <p class="p-price">₹<?php echo $p['price']; ?> <span style="font-size:12px;color:var(--ink-soft);font-family:var(--body);">/ <?php echo htmlspecialchars($p['weight']); ?></span></p>
+      <button
+        class="btn-mini add-to-cart"
+        data-name="<?php echo htmlspecialchars($p['name']); ?>"
+        data-weight="<?php echo htmlspecialchars($p['weight']); ?>"
+        data-price="<?php echo $p['price']; ?>"
+        data-color="<?php echo htmlspecialchars($p['jar_color']); ?>"
+        data-image="<?php echo htmlspecialchars($p['image']); ?>"
+      >Add To Cart</button>
     </div>
     <?php
     return ob_get_clean();

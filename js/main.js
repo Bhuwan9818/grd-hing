@@ -132,10 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
     cartBody.innerHTML = cart.map(function (item, idx) {
       return (
         '<div class="cart-line" data-idx="' + idx + '">' +
-        '<div class="jar-illustration" aria-hidden="true">' +
-        '<div class="jar-lid" style="background:linear-gradient(180deg,#E7BD6B,var(--turmeric-dp));"></div>' +
-        '<div class="jar-body"><div class="jar-label" style="background:' + item.color + ';"></div></div>' +
-        '</div>' +
+        '<div class="cart-line-thumb"><img src="' + item.image + '" alt="' + item.name + '"></div>' +
         '<div class="cart-line-info">' +
         '<b>' + item.name + '</b>' +
         '<span>' + item.weight + ' · ' + money(item.price) + '</span>' +
@@ -172,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
   renderCart();
 
   function addToCart(item) {
-    var existing = cart.find(function (i) { return i.name === item.name; });
+    var existing = cart.find(function (i) { return i.name === item.name && i.weight === item.weight; });
     if (existing) {
       existing.qty += item.qty;
     } else {
@@ -188,9 +185,10 @@ document.addEventListener('DOMContentLoaded', function () {
       var price = parseFloat(btn.getAttribute('data-price') || '0');
       var color = btn.getAttribute('data-color') || '#4A2C1D';
       var weight = btn.getAttribute('data-weight') || '';
-      var qty = quantity || 1;
-      addToCart({ name: name, price: price, color: color, weight: weight, qty: qty });
-      showToast(qty + ' × ' + name + ' added to cart');
+      var image = btn.getAttribute('data-image') || '';
+      var qty = btn.classList.contains('btn-mini') ? 1 : (quantity || 1);
+      addToCart({ name: name, price: price, color: color, weight: weight, image: image, qty: qty });
+      showToast(qty + ' × ' + name + ' (' + weight + ') added to cart');
     });
   });
 
@@ -257,4 +255,5 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   attachTilt(document.querySelector('.hero-jar-wrap'), 10);
   attachTilt(document.querySelector('.featured-media img'), 6);
+  attachTilt(document.querySelector('.product-hero-media img'), 8);
 });

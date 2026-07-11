@@ -68,22 +68,28 @@ require __DIR__ . '/includes/header.php';
       <div class="section-head reveal">
         <span class="eyebrow">Our Collection</span>
         <h2>Every Jar, Ground With Intent</h2>
-        <p>Hing Churan leads the shelf today — turmeric, chilli, coriander and our house garam masala are on their way, made with the same standard.</p>
+        <p>One churan, sized for how you cook — from a trial jar to the one that lives on your counter every day. Whole hing dana too, for those who grind their own.</p>
       </div>
 
       <div class="featured-card reveal">
         <div class="featured-media">
           <span class="ribbon"><?php echo htmlspecialchars($featured['badge']); ?></span>
-          <img src="<?php echo htmlspecialchars($featured['image']); ?>" alt="<?php echo htmlspecialchars($featured['name']); ?> jar">
+          <a href="product.php?id=<?php echo urlencode($featured['id']); ?>">
+            <img src="<?php echo htmlspecialchars($featured['image']); ?>" alt="<?php echo htmlspecialchars($featured['name']); ?> jar">
+          </a>
         </div>
         <div class="featured-body">
           <span class="eyebrow">Flagship Product</span>
-          <h3><?php echo htmlspecialchars($featured['name']); ?></h3>
+          <a href="product.php?id=<?php echo urlencode($featured['id']); ?>" class="featured-title-link"><h3><?php echo htmlspecialchars($featured['name']); ?></h3></a>
           <p class="desc"><?php echo htmlspecialchars($featured['tagline']); ?> Hand-blended in small batches and packed while the aroma is at its peak — this is the jar that started G.R.D.</p>
           <div class="price-row">
             <span class="price">₹<?php echo $featured['price']; ?></span>
-            <span class="mrp">₹<?php echo $featured['mrp']; ?></span>
-            <span class="save">Save <?php echo round((1 - $featured['price']/$featured['mrp'])*100); ?>%</span>
+            <?php if ($featured['mrp'] > $featured['price']): ?>
+              <span class="mrp">₹<?php echo $featured['mrp']; ?></span>
+              <span class="save">Save <?php echo round((1 - $featured['price']/$featured['mrp'])*100); ?>%</span>
+            <?php else: ?>
+              <span class="save">MRP · <?php echo htmlspecialchars($featured['weight']); ?></span>
+            <?php endif; ?>
           </div>
           <div class="featured-actions">
             <div class="qty-select">
@@ -91,21 +97,15 @@ require __DIR__ . '/includes/header.php';
               <span class="qty-val">1</span>
               <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>
             </div>
-            <button class="btn btn-primary add-to-cart" data-name="<?php echo htmlspecialchars($featured['name']); ?>" data-price="<?php echo $featured['price']; ?>" data-color="<?php echo htmlspecialchars($featured['jar_color']); ?>" data-weight="<?php echo htmlspecialchars($featured['weight']); ?>">Add To Cart</button>
+            <button class="btn btn-primary add-to-cart" data-name="<?php echo htmlspecialchars($featured['name']); ?>" data-weight="<?php echo htmlspecialchars($featured['weight']); ?>" data-price="<?php echo $featured['price']; ?>" data-color="<?php echo htmlspecialchars($featured['jar_color']); ?>" data-image="<?php echo htmlspecialchars($featured['image']); ?>">Add To Cart</button>
+            <a href="product.php?id=<?php echo urlencode($featured['id']); ?>" class="btn btn-ghost-dark">View Details</a>
           </div>
         </div>
       </div>
 
       <div class="product-grid stagger">
         <?php foreach ($others as $p): ?>
-        <div class="product-card reveal">
-          <span class="tag"><?php echo htmlspecialchars($p['badge']); ?></span>
-          <?php echo grd_jar_illustration($p['jar_color'], $p['label_text']); ?>
-          <h4><?php echo htmlspecialchars($p['name']); ?></h4>
-          <p class="p-tag"><?php echo htmlspecialchars($p['tagline']); ?></p>
-          <p class="p-price">₹<?php echo $p['price']; ?> <span style="font-size:12px;color:var(--ink-soft);font-family:var(--body);">/ <?php echo htmlspecialchars($p['weight']); ?></span></p>
-          <button class="btn-mini" disabled>Notify Me</button>
-        </div>
+          <?php echo grd_product_card($p); ?>
         <?php endforeach; ?>
       </div>
     </div>

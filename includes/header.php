@@ -2,16 +2,33 @@
 /**
  * Header include: <head> + sticky navbar.
  * Uses relative image paths — keep this file included from files
- * that live at the project root (e.g. index.php).
+ * that live at the project root (e.g. index.php, product.php).
+ *
+ * Pages can set $page_title / $page_description before including this
+ * file to override the defaults below (see product.php for an example).
  */
+if (!isset($page_title)) {
+    $page_title = 'G.R.D Hing — Bandhani Hing Churan | Pure, Plant-Based Asafoetida';
+}
+if (!isset($page_description)) {
+    $page_description = 'G.R.D Hing brings authentic Bandhani hing churan to your kitchen — plant-based, additive-free, and ground for real Indian cooking.';
+}
+// Section links (#shop, #benefits, etc.) only work directly on the homepage —
+// from any other page they need to point back to index.php first.
+$grd_on_home = basename($_SERVER['SCRIPT_NAME']) === 'index.php';
+$grd_home_href = $grd_on_home ? '#top' : 'index.php';
+function grd_section_href($hash) {
+    global $grd_on_home;
+    return $grd_on_home ? '#' . $hash : 'index.php#' . $hash;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>G.R.D Hing — Bandhani Hing Churan | Pure, Plant-Based Asafoetida</title>
-<meta name="description" content="G.R.D Hing brings authentic Bandhani hing churan to your kitchen — plant-based, additive-free, and ground for real Indian cooking.">
+<title><?php echo htmlspecialchars($page_title); ?></title>
+<meta name="description" content="<?php echo htmlspecialchars($page_description); ?>">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,20 +42,20 @@
 
 <header class="navbar">
   <div class="container">
-    <a href="#top" class="brand">
+    <a href="<?php echo $grd_home_href; ?>" class="brand">
       <img src="images/logo.png" alt="G.R.D Hing emblem — bullock cart mark">
       <div class="brand-text">
-        <div class="brand-name">G.R.D Masala</div>
+        <div class="brand-name">G.R.D Hing</div>
         <div class="brand-sub">Panditji Hing Kayam</div>
       </div>
     </a>
 
     <nav class="nav-links" aria-label="Primary">
-      <a href="#top">Home</a>
-      <a href="#shop">Shop</a>
-      <a href="#benefits">Benefits</a>
-      <a href="#kitchen">Recipes</a>
-      <a href="#reviews">Reviews</a>
+      <a href="<?php echo $grd_home_href; ?>">Home</a>
+      <a href="<?php echo grd_section_href('shop'); ?>">Shop</a>
+      <a href="<?php echo grd_section_href('benefits'); ?>">Benefits</a>
+      <a href="<?php echo grd_section_href('kitchen'); ?>">Recipes</a>
+      <a href="<?php echo grd_section_href('reviews'); ?>">Reviews</a>
     </nav>
 
     <div class="nav-actions">
