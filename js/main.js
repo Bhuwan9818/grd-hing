@@ -255,5 +255,88 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   attachTilt(document.querySelector('.hero-jar-wrap'), 10);
   attachTilt(document.querySelector('.featured-media img'), 6);
-  attachTilt(document.querySelector('.product-hero-media img'), 8);
+
+  /* ==========================================================
+     PRODUCT PAGE — MAGNIFIER LENS + CLICK-TO-ZOOM LIGHTBOX
+     Only runs when the elements exist (i.e. on product.php).
+     Hover lens is desktop-only (fine pointer + enough screen
+     width for the result panel to sit beside the image); the
+     round zoom button always opens the fullscreen lightbox,
+     which is how touch/narrow-screen visitors zoom instead.
+     ========================================================== */
+  var zoomContainer = document.getElementById('zoomContainer');
+  var productImage = document.getElementById('productImage');
+
+  if (zoomContainer && productImage) {
+    var zoomLens = document.getElementById('zoomLens');
+    var zoomResult = document.getElementById('zoomResult');
+    var zoomTrigger = document.getElementById('zoomTrigger');
+    var lightboxOverlay = document.getElementById('lightboxOverlay');
+    var lightboxImage = document.getElementById('lightboxImage');
+    var lightboxClose = document.getElementById('lightboxClose');
+
+    var ZOOM_FACTOR = 2.4;
+    var magnifierEnabled = supportsHover && !reduceMotion && window.innerWidth >= 1180;
+
+    if (magnifierEnabled && zoomLens && zoomResult) {
+      zoomResult.style.backgroundImage = 'url(' + productImage.src + ')';
+
+      var rect, lensSize = 160;
+
+      zoomContainer.addEventListener('mouseenter', function () {
+        rect = productImage.getBoundingClientRect();
+        zoomResult.style.backgroundSize = (rect.width * ZOOM_FACTOR) + 'px ' + (rect.height * ZOOM_FACTOR) + 'px';
+        zoomResult.style.top = rect.top + 'px';
+        zoomResult.style.left = (rect.right + 28) + 'px';
+        // If the result panel would run off the right edge of the screen, skip showing it
+        if (rect.right + 28 + 420 > window.innerWidth) {
+          zoomResult.style.left = (rect.left - 420 - 28) + 'px';
+        }
+        zoomLens.classList.add('show');
+        zoomResult.classList.add('show');
+      });
+
+      zoomContainer.addEventListener('mousemove', function (e) {
+        if (!rect) rect = productImage.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        // clamp lens within the image bounds
+        x = Math.max(0, Math.min(x, rect.width));
+        y = Math.max(0, Math.min(y, rect.height));
+
+        zoomLens.style.left = (rect.left + x - lensSize / 2) + 'px';
+        zoomLens.style.top = (rect.top + y - lensSize / 2) + 'px';
+
+        var bgX = -(x * ZOOM_FACTOR - 210);
+        var bgY = -(y * ZOOM_FACTOR - 210);
+        zoomResult.style.backgroundPosition = bgX + 'px ' + bgY + 'px';
+      });
+
+      zoomContainer.addEventListener('mouseleave', function () {
+        zoomLens.classList.remove('show');
+        zoomResult.classList.remove('show');
+      });
+    }
+
+    function openLightbox() {
+      lightboxImage.src = productImage.src;
+      lightboxImage.alt = productImage.alt;
+      lightboxOverlay.classList.add('show');
+    }
+    function closeLightbox() {
+      lightboxOverlay.classList.remove('show');
+    }
+
+    if (zoomTrigger) zoomTrigger.addEventListener('click', openLightbox);
+    productImage.addEventListener('click', openLightbox);
+    if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+    if (lightboxOverlay) {
+      lightboxOverlay.addEventListener('click', function (e) {
+        if (e.target === lightboxOverlay) closeLightbox();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  }
 });

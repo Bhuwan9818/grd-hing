@@ -49,10 +49,15 @@ require __DIR__ . '/includes/header.php';
   <!-- ============================= PRODUCT HERO ============================= -->
   <section class="product-hero">
     <div class="container product-hero-grid">
-      <div class="product-hero-media reveal">
+      <div class="product-hero-media reveal" id="zoomContainer">
         <span class="ribbon"><?php echo htmlspecialchars($product['badge']); ?></span>
         <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?> — <?php echo htmlspecialchars($product['weight']); ?>" id="productImage">
+        <div class="zoom-lens" id="zoomLens" aria-hidden="true"></div>
+        <button type="button" class="zoom-trigger" id="zoomTrigger" aria-label="View larger image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
       </div>
+      <div class="zoom-result" id="zoomResult" aria-hidden="true"></div>
 
       <div class="product-hero-info reveal">
         <span class="eyebrow">Bandhani Hing</span>
@@ -66,7 +71,8 @@ require __DIR__ . '/includes/header.php';
             <?php foreach ($variants as $v): ?>
               <a href="product.php?id=<?php echo urlencode($v['id']); ?>"
                  class="variant-pill<?php echo $v['id'] === $product['id'] ? ' active' : ''; ?>">
-                <?php echo htmlspecialchars($v['weight']); ?>
+                <span class="variant-pill-weight"><?php echo htmlspecialchars($v['weight']); ?></span>
+                <span class="variant-pill-price">₹<?php echo $v['price']; ?></span>
               </a>
             <?php endforeach; ?>
           </div>
@@ -82,6 +88,7 @@ require __DIR__ . '/includes/header.php';
             <span class="save" style="background:var(--parchment);color:var(--saffron-dp);">MRP · Inclusive of all taxes</span>
           <?php endif; ?>
         </div>
+        <div class="stock-line"><span class="stock-dot"></span> In Stock — ships in 1–2 days</div>
 
         <div class="featured-actions" style="margin-top:26px;">
           <div class="qty-select" style="border-color:var(--line);">
@@ -121,10 +128,18 @@ require __DIR__ . '/includes/header.php';
         <div class="specs-col">
           <h3>Good To Know</h3>
           <ul class="spec-facts">
-            <li><span>Net Weight</span><b><?php echo htmlspecialchars($product['weight']); ?></b></li>
-            <li><span>Storage</span><b>Cool, dry place</b></li>
-            <li><span>Best Used In</span><b><?php echo $product['group'] === 'hing-dana' ? 'Tempering, pickles, papad' : 'Dal, sabzi, tadka'; ?></b></li>
-            <li><span>Made In</span><b>Hathras, Uttar Pradesh</b></li>
+            <li>
+              <span class="spec-left"><span class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M5 8l7-5 7 5M5 8v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"/></svg></span><span class="spec-label">Net Weight</span></span><b><?php echo htmlspecialchars($product['weight']); ?></b>
+            </li>
+            <li>
+              <span class="spec-left"><span class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6.5a8.38 8.38 0 0 1-3 6.5 8.38 8.38 0 0 1 3 6.5M4 6.5a8.38 8.38 0 0 0 3 6.5 8.38 8.38 0 0 0-3 6.5M6 3h12M6 21h12"/></svg></span><span class="spec-label">Storage</span></span><b>Cool, dry place</b>
+            </li>
+            <li>
+              <span class="spec-left"><span class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span><span class="spec-label">Best Used In</span></span><b><?php echo $product['group'] === 'hing-dana' ? 'Tempering, pickles, papad' : 'Dal, sabzi, tadka'; ?></b>
+            </li>
+            <li>
+              <span class="spec-left"><span class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span class="spec-label">Made In</span></span><b>Hathras, Uttar Pradesh</b>
+            </li>
           </ul>
         </div>
       </div>
@@ -147,6 +162,14 @@ require __DIR__ . '/includes/header.php';
     </div>
   </section>
   <?php endif; ?>
+
+  <!-- ============================= IMAGE LIGHTBOX ============================= -->
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close zoomed image">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img src="" alt="" id="lightboxImage">
+  </div>
 
 </main>
 
