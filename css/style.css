@@ -119,17 +119,17 @@ input{ font-family:inherit; }
 }
 .navbar .container{
   display:flex; align-items:center; justify-content:space-between;
-  height:84px;
+  height:90px;
 }
 .brand{ display:flex; align-items:center; gap:12px; }
-.brand img{ height:52px; width:52px; object-fit:contain; }
+.brand img{ height:80px; width:80px; object-fit:contain; }
 .brand-text{ line-height:1.1; }
 .brand-text .brand-name{ font-family:var(--display); font-size:20px; color:var(--umber-deep); }
 .brand-text .brand-sub{ font-family:var(--body); font-weight:600; font-size:10.5px; letter-spacing:0.16em; color:var(--saffron-dp); text-transform:uppercase; }
 
 .nav-links{ display:flex; gap:36px; }
 .nav-links a{
-  font-size:15px; font-weight:500; color:var(--ink-soft);
+  font-size:16px; font-weight:500; color:var(--ink-soft);
   position:relative; padding:4px 0;
   transition:color .25s ease;
 }

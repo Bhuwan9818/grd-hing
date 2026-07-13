@@ -33,7 +33,7 @@ require __DIR__ . '/includes/header.php';
       </div>
       <div class="hero-visual reveal">
         <div class="hero-jar-wrap">
-          <img src="images/jar-hero.png" alt="G.R.D Bandhani Hing Churan jar, 100g">
+          <img src="images/jar-hero-banner.webp" alt="G.R.D Bandhani Hing Churan jar, 100g">
           <div class="hero-stamp"><?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.6H21l-5.4 4 2.1 6.6L12 15.8 6.3 19.2l2.1-6.6L3 8.6h6.6z"/></svg>', 8); ?></div>
         </div>
       </div>
@@ -182,7 +182,7 @@ require __DIR__ . '/includes/header.php';
   <section class="section lifestyle" id="kitchen">
     <div class="container">
       <div class="lifestyle-media reveal">
-        <img src="images/lifestyle-dal.png" alt="Dal, roti and rice made with G.R.D Hing Churan">
+        <img src="images/lifestyle-dal.webp" alt="Dal, roti and rice made with G.R.D Hing Churan">
       </div>
       <div class="lifestyle-copy reveal">
         <span class="eyebrow">From Our Kitchen</span>
