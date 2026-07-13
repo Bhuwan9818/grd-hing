@@ -19,7 +19,7 @@
       <div class="footer-col">
         <div class="footer-brand">
           <img src="images/logo.png" alt="G.R.D Hing emblem">
-          <span>G.R.D Hing</span>
+          <span>G.R.D masala</span>
         </div>
         <p class="desc">Bandhani hing churan, ground the way it's always been — pure, plant-based, and strong enough to matter with just a pinch.</p>
         <div class="footer-social">

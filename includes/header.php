@@ -45,7 +45,7 @@ function grd_section_href($hash) {
     <a href="<?php echo $grd_home_href; ?>" class="brand">
       <img src="images/logo.png" alt="G.R.D Hing emblem — bullock cart mark">
       <div class="brand-text">
-        <div class="brand-name">G.R.D Hing</div>
+        <div class="brand-name">G.R.D Masala</div>
         <div class="brand-sub">Panditji Hing Kayam</div>
       </div>
     </a>
