@@ -87,3 +87,64 @@ Every product now has its own real page at `product.php?id=N` instead of living 
 - **Icons on the spec list** — Net Weight, Storage, Best Used In, and Made In each now have a small line icon matching the rest of the site's icon style, instead of plain text rows.
 
 One bug caught and fixed during testing: the zoomed-in result panel is a purely visual overlay, but it was rendered on top of the zoom button itself and silently blocked clicks on it while hovering. Fixed by making that panel `pointer-events: none` so clicks always pass through to whatever's underneath.
+
+## v6 — Checkout, customer accounts & admin panel
+
+The site is now a fully working (Cash on Delivery only) store, end to end: browse → add to cart → checkout → place order → track it, plus a separate admin panel to manage products and orders.
+
+Most of the underlying page logic already existed from earlier work, but the files were all sitting flat at the project root with paths that assumed a folder structure that didn't actually exist yet, a few pages were missing outright, and there was **no CSS at all** for checkout, login, the account dashboard, or the admin panel. This pass reorganized everything into the right folders, wrote the missing pieces, added the missing styling, and tested the whole flow against a real MySQL database.
+
+### File structure (final)
+
+```
+includes/          db.php, cart.php, auth.php (customer), orders.php,
+                    product-data.php, header.php, footer.php, helpers.php
+api/                cart-add.php, cart-get.php, cart-update.php, cart-remove.php
+account/            login.php, register.php, logout.php, dashboard.php, order.php
+admin/              index.php, login.php, logout.php, orders.php, order-view.php,
+                    products.php, product-form.php, product-delete.php
+admin/includes/     auth.php (admin), layout-head.php, layout-foot.php
+sql/schema.sql
+images/products/    uploaded product images land here (must be writable)
+```
+
+### Checkout (COD only)
+
+- `checkout.php` redisplays with inline validation errors and re-filled values if a submission fails, instead of losing everything.
+- `place-order.php` validates the shipping form server-side, checks the CSRF token, saves the order + line items (snapshotted, so editing a product later never rewrites order history), clears the cart, and redirects to the confirmation page. Only Cash on Delivery is accepted right now — the UPI/Cards option in the payment block stays visibly disabled until that's built.
+- `order-confirmation.php` is the thank-you page, keyed by the order's public `order_number` (e.g. `GRD-7BE87C`), showing the items, totals, and shipping address, with a link into the dashboard if the buyer is logged in.
+- `includes/orders.php` holds every order-related DB query (create, fetch by number/id, fetch a customer's orders, admin listing/status update, dashboard stats) so checkout, the account dashboard, and the admin panel all read/write orders the same way.
+
+### Customer accounts (`account/`)
+
+- **New:** `includes/auth.php` — this was referenced everywhere (checkout, login, dashboard) but didn't exist yet. It now has `grd_login_customer()`, `grd_register_customer()`, `grd_current_customer()`, `grd_require_login()`, and `grd_logout_customer()`, all backed by the `customers` table.
+- `login.php`, `register.php`, `logout.php` — standard email/password auth. Supports `?redirect=` so logging in mid-checkout returns you to `checkout.php`.
+- `dashboard.php` lists every order tied to the logged-in customer, matched by `customer_id` **or** by email — so a guest order placed before creating an account still shows up once they register with the same email.
+- `order.php?id=` — single order detail with a 4-stage status tracker (Placed → Processing → Shipped → Delivered, or a Cancelled state). Looked up by id **and** ownership (customer_id/email match) so one customer can never view another's order by guessing an id.
+
+### Admin panel (`admin/`)
+
+Completely separate login/session from customer accounts (`admin_users` table, its own `admin_id` session key) — a customer account can never gain admin access, and vice versa.
+
+- **New:** `admin/login.php`, `admin/logout.php` — didn't exist before, even though the auth functions (`grd_admin_login()` etc.) were already written and every admin page already redirected to `login.php` when logged out.
+- **New:** `admin/index.php` — the dashboard: order count, pending count, revenue, active product count, customer count, plus the 8 most recent orders.
+- **New:** `admin/orders.php` — the order list, filterable by status (Placed/Processing/Shipped/Delivered/Cancelled).
+- `admin/order-view.php` — line items, shipping address, and a status dropdown that updates immediately and is what the customer sees on their own dashboard.
+- `admin/products.php` (list, with active/hidden status and quick edit/delete), `admin/product-form.php` (shared add/edit form — handles image upload with type/size validation, or keeps the existing image on edit), `admin/product-delete.php`. Products with the same "Product Group" value show up as size-switcher variants on their product page, same as the original 4 Bandhani Hing Churan sizes.
+- Shared admin chrome (sidebar nav, topbar, CSRF helper) lives in `admin/includes/auth.php` and `admin/includes/layout-head.php`/`layout-foot.php`.
+- **Default seeded login:** `admin@grdhing.com` / `admin123` (from `sql/schema.sql`) — **change this password after first login**; there's no self-service "change password" screen yet, so update it directly in the `admin_users` table for now.
+
+### Styling
+
+`css/style.css` had zero rules for any of this (checkout, cart totals, auth cards, the account dashboard, order status badges/tracker, or the entire admin panel) — it was only ever styled through the homepage/product-page work. Added a full new section covering all of the above, using the same design tokens (colors, fonts, radius, shadows) as the rest of the site, plus responsive breakpoints for the admin sidebar, checkout grid, and account layout on mobile.
+
+### Notes
+
+- Uploaded product images are saved to `images/products/`; make sure that folder is writable by PHP on your host.
+- CSRF tokens are checked on every state-changing form (checkout, login, register, admin product save/delete, admin status update).
+- **Tested end-to-end** against a real MariaDB instance running `sql/schema.sql` unmodified: add to cart → update/remove cart lines → checkout → order saved in DB → confirmation page → order visible on the customer dashboard (including a guest order linking up after registering with the same email) → order visible in the admin panel → status change in admin reflected instantly on the customer's tracker → admin product add (with image upload) appears live on the homepage → admin product delete removes it. Every PHP file also passes `php -l` and every `require`/`include` path was verified to resolve.
+- Run locally with PHP's built-in server, e.g.:
+  ```
+  GRD_DB_HOST=localhost GRD_DB_NAME=grd_hing GRD_DB_USER=grd_app GRD_DB_PASS=grd_app_pass php -S localhost:8000
+  ```
+  (or set the same values as real environment variables / edit the defaults in `includes/db.php`).

@@ -42,6 +42,7 @@ function grd_product_card($p) {
       <p class="p-price">₹<?php echo $p['price']; ?> <span style="font-size:12px;color:var(--ink-soft);font-family:var(--body);">/ <?php echo htmlspecialchars($p['weight']); ?></span></p>
       <button
         class="btn-mini add-to-cart"
+        data-id="<?php echo (int)$p['id']; ?>"
         data-name="<?php echo htmlspecialchars($p['name']); ?>"
         data-weight="<?php echo htmlspecialchars($p['weight']); ?>"
         data-price="<?php echo $p['price']; ?>"

@@ -78,10 +78,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ==========================================================
      MINI CART DRAWER
-     In-memory only (no backend yet) — swap renderCart()'s data
-     source for a real cart session/API once the backend exists.
+     Backed by the server-side session cart (includes/cart.php +
+     api/cart-*.php) so it survives page navigation — add an item
+     on the homepage, it's still there on checkout.php.
      ========================================================== */
-  var cart = []; // { name, price, weight, color, qty }
+  var API = (window.GRD_API_PREFIX || '') + 'api/';
   var cartOverlay = document.getElementById('cartOverlay');
   var cartDrawer = document.getElementById('cartDrawer');
   var cartBody = document.getElementById('cartBody');
@@ -90,49 +91,55 @@ document.addEventListener('DOMContentLoaded', function () {
   var cartBtn = document.getElementById('cartBtn');
   var cartClose = document.getElementById('cartClose');
 
-  function money(n) { return '₹' + n.toLocaleString('en-IN'); }
+  function money(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
 
   function openCart() {
-    cartOverlay.classList.add('show');
-    cartDrawer.classList.add('show');
+    if (cartOverlay && cartDrawer) {
+      cartOverlay.classList.add('show');
+      cartDrawer.classList.add('show');
+    }
   }
   function closeCart() {
-    cartOverlay.classList.remove('show');
-    cartDrawer.classList.remove('show');
+    if (cartOverlay && cartDrawer) {
+      cartOverlay.classList.remove('show');
+      cartDrawer.classList.remove('show');
+    }
   }
-  if (cartBtn) cartBtn.addEventListener('click', openCart);
+  if (cartBtn) cartBtn.addEventListener('click', function (e) { e.preventDefault(); openCart(); fetchCart(); });
   if (cartClose) cartClose.addEventListener('click', closeCart);
   if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
 
-  function renderCart() {
-    var count = cart.reduce(function (s, i) { return s + i.qty; }, 0);
-    var subtotal = cart.reduce(function (s, i) { return s + i.qty * i.price; }, 0);
-
-    if (cartBadge) {
-      cartBadge.textContent = count;
-      cartBadge.classList.toggle('show', count > 0);
+  function emptyCartMarkup() {
+    var studs = '';
+    for (var i = 0; i < 6; i++) {
+      var angle = (i / 6) * 360;
+      studs += '<span class="seal-diamond" style="transform:rotate(' + angle + 'deg) translate(0,calc(-1 * (var(--seal-size) / 2 - 7px))) rotate(-' + angle + 'deg);"></span>';
     }
-    if (cartSubtotal) cartSubtotal.textContent = money(subtotal);
+    return (
+      '<div class="cart-empty">' +
+      '<div class="seal">' + studs + '</div>' +
+      '<p>Your cart is empty — add a jar to get started.</p>' +
+      '</div>'
+    );
+  }
 
+  function renderCart(data) {
+    if (cartBadge) {
+      cartBadge.textContent = data.count;
+      cartBadge.classList.toggle('show', data.count > 0);
+    }
+    if (cartSubtotal) cartSubtotal.textContent = money(data.subtotal);
     if (!cartBody) return;
-    if (cart.length === 0) {
-      var studs = '';
-      for (var i = 0; i < 6; i++) {
-        var angle = (i / 6) * 360;
-        studs += '<span class="seal-diamond" style="transform:rotate(' + angle + 'deg) translate(0,calc(-1 * (var(--seal-size) / 2 - 7px))) rotate(-' + angle + 'deg);"></span>';
-      }
-      cartBody.innerHTML =
-        '<div class="cart-empty">' +
-        '<div class="seal">' + studs + '</div>' +
-        '<p>Your cart is empty — add a jar to get started.</p>' +
-        '</div>';
+
+    if (!data.items || data.items.length === 0) {
+      cartBody.innerHTML = emptyCartMarkup();
       return;
     }
 
-    cartBody.innerHTML = cart.map(function (item, idx) {
+    cartBody.innerHTML = data.items.map(function (item) {
       return (
-        '<div class="cart-line" data-idx="' + idx + '">' +
-        '<div class="cart-line-thumb"><img src="' + item.image + '" alt="' + item.name + '"></div>' +
+        '<div class="cart-line" data-id="' + item.id + '">' +
+        '<div class="cart-line-thumb"><img src="' + (window.GRD_API_PREFIX || '') + item.image + '" alt="' + item.name + '"></div>' +
         '<div class="cart-line-info">' +
         '<b>' + item.name + '</b>' +
         '<span>' + item.weight + ' · ' + money(item.price) + '</span>' +
@@ -148,55 +155,80 @@ document.addEventListener('DOMContentLoaded', function () {
     }).join('');
 
     cartBody.querySelectorAll('.cart-line').forEach(function (line) {
-      var idx = parseInt(line.getAttribute('data-idx'), 10);
+      var id = line.getAttribute('data-id');
+      var currentQty = parseInt(line.querySelector('.cart-line-qty span').textContent, 10);
       var minus = line.querySelector('.cart-qty-minus');
       var plus = line.querySelector('.cart-qty-plus');
       var remove = line.querySelector('.cart-line-remove');
-      if (minus) minus.addEventListener('click', function () {
-        cart[idx].qty = Math.max(1, cart[idx].qty - 1);
-        renderCart();
-      });
-      if (plus) plus.addEventListener('click', function () {
-        cart[idx].qty = Math.min(20, cart[idx].qty + 1);
-        renderCart();
-      });
-      if (remove) remove.addEventListener('click', function () {
-        cart.splice(idx, 1);
-        renderCart();
-      });
+      if (minus) minus.addEventListener('click', function () { updateQty(id, Math.max(1, currentQty - 1)); });
+      if (plus) plus.addEventListener('click', function () { updateQty(id, Math.min(20, currentQty + 1)); });
+      if (remove) remove.addEventListener('click', function () { removeItem(id); });
     });
   }
-  renderCart();
 
-  function addToCart(item) {
-    var existing = cart.find(function (i) { return i.name === item.name && i.weight === item.weight; });
-    if (existing) {
-      existing.qty += item.qty;
-    } else {
-      cart.push(item);
-    }
-    renderCart();
-    openCart();
+  function postJSON(url, body) {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body,
+      credentials: 'same-origin',
+    }).then(function (r) { return r.json(); });
   }
+
+  function fetchCart() {
+    fetch(API + 'cart-get.php', { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) { if (data.success) renderCart(data); })
+      .catch(function () { /* fails silently — badge stays at server-rendered count */ });
+  }
+
+  function addToCart(productId, qty, label) {
+    postJSON(API + 'cart-add.php', 'product_id=' + encodeURIComponent(productId) + '&qty=' + encodeURIComponent(qty))
+      .then(function (data) {
+        if (data.success) {
+          renderCart(data);
+          openCart();
+          if (label) showToast(label);
+        } else {
+          showToast(data.error || 'Could not add that to your cart.');
+        }
+      })
+      .catch(function () { showToast('Network error — please try again.'); });
+  }
+
+  function updateQty(productId, qty) {
+    postJSON(API + 'cart-update.php', 'product_id=' + encodeURIComponent(productId) + '&qty=' + encodeURIComponent(qty))
+      .then(function (data) { if (data.success) renderCart(data); });
+  }
+
+  function removeItem(productId) {
+    postJSON(API + 'cart-remove.php', 'product_id=' + encodeURIComponent(productId))
+      .then(function (data) { if (data.success) renderCart(data); });
+  }
+
+  // Populate the drawer's item list on load (header already renders the
+  // badge count server-side, but the drawer body itself needs this fetch).
+  fetchCart();
 
   document.querySelectorAll('.add-to-cart').forEach(function (btn) {
     btn.addEventListener('click', function () {
+      var productId = btn.getAttribute('data-id');
+      if (!productId) return;
       var name = btn.getAttribute('data-name') || 'Item';
-      var price = parseFloat(btn.getAttribute('data-price') || '0');
-      var color = btn.getAttribute('data-color') || '#4A2C1D';
       var weight = btn.getAttribute('data-weight') || '';
-      var image = btn.getAttribute('data-image') || '';
       var qty = btn.classList.contains('btn-mini') ? 1 : (quantity || 1);
-      addToCart({ name: name, price: price, color: color, weight: weight, image: image, qty: qty });
-      showToast(qty + ' × ' + name + ' (' + weight + ') added to cart');
+      addToCart(productId, qty, qty + ' × ' + name + ' (' + weight + ') added to cart');
     });
   });
 
   var cartCheckout = document.getElementById('cartCheckout');
   if (cartCheckout) {
-    cartCheckout.addEventListener('click', function () {
-      if (cart.length === 0) { showToast('Your cart is empty'); return; }
-      showToast('Checkout isn\'t connected yet — coming soon!');
+    cartCheckout.addEventListener('click', function (e) {
+      var count = cartBadge ? parseInt(cartBadge.textContent, 10) || 0 : 0;
+      if (count === 0) {
+        e.preventDefault();
+        showToast('Your cart is empty — add a jar first.');
+      }
     });
   }
 

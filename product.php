@@ -97,6 +97,7 @@ require __DIR__ . '/includes/header.php';
             <button type="button" class="qty-plus" style="color:var(--umber-deep);" aria-label="Increase quantity">+</button>
           </div>
           <button class="btn btn-primary add-to-cart"
+                  data-id="<?php echo (int)$product['id']; ?>"
                   data-name="<?php echo htmlspecialchars($product['name']); ?>"
                   data-weight="<?php echo htmlspecialchars($product['weight']); ?>"
                   data-price="<?php echo $product['price']; ?>"

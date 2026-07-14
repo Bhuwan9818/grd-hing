@@ -1,3 +1,4 @@
+<?php if (!isset($grd_asset_prefix)) { $grd_asset_prefix = ''; } ?>
 <section class="section" style="padding-top:0; padding-bottom:0;">
   <div class="container">
     <div class="cta-band reveal">
@@ -18,8 +19,8 @@
     <div class="footer-grid">
       <div class="footer-col">
         <div class="footer-brand">
-          <img src="images/logo.webp" alt="G.R.D Hing emblem">
-          <span>G.R.D masala</span>
+          <img src="<?php echo $grd_asset_prefix; ?>images/logo.png" alt="G.R.D Hing emblem">
+          <span>G.R.D Hing</span>
         </div>
         <p class="desc">Bandhani hing churan, ground the way it's always been — pure, plant-based, and strong enough to matter with just a pinch.</p>
         <div class="footer-social">
@@ -38,29 +39,28 @@
       <div class="footer-col">
         <h5>Shop</h5>
         <ul>
-          <li><a href="#shop">Hing Churan</a></li>
-          <li><a href="#shop">Turmeric Powder</a></li>
-          <li><a href="#shop">Chilli Powder</a></li>
-          <li><a href="#shop">All Products</a></li>
+          <li><a href="<?php echo grd_section_href('shop'); ?>">Hing Churan</a></li>
+          <li><a href="<?php echo grd_section_href('shop'); ?>">Hing Dana</a></li>
+          <li><a href="<?php echo grd_section_href('shop'); ?>">All Products</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h5>Company</h5>
         <ul>
-          <li><a href="#">Our Story</a></li>
-          <li><a href="#benefits">Benefits</a></li>
-          <li><a href="#kitchen">Recipes</a></li>
-          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="<?php echo grd_section_href('story'); ?>">Our Story</a></li>
+          <li><a href="<?php echo grd_section_href('benefits'); ?>">Benefits</a></li>
+          <li><a href="<?php echo grd_section_href('kitchen'); ?>">Recipes</a></li>
+          <li><a href="<?php echo grd_section_href('reviews'); ?>">Reviews</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h5>Help</h5>
+        <h5>Account</h5>
         <ul>
-          <li><a href="#">Track Order</a></li>
+          <li><a href="<?php echo $grd_asset_prefix; ?>account/dashboard.php">Track Order</a></li>
+          <li><a href="<?php echo $grd_asset_prefix; ?>account/login.php">Login / Register</a></li>
           <li><a href="#">Shipping Policy</a></li>
-          <li><a href="#">Returns</a></li>
           <li><a href="#">Contact Us</a></li>
         </ul>
       </div>
@@ -82,11 +82,11 @@
     </button>
   </div>
   <div class="cart-body" id="cartBody">
-    <!-- populated by js/main.js -->
+    <!-- populated by js/main.js from api/cart-get.php -->
   </div>
   <div class="cart-foot">
     <div class="cart-subtotal"><span>Subtotal</span><b id="cartSubtotal">₹0</b></div>
-    <button class="btn btn-primary" id="cartCheckout" type="button">Checkout</button>
+    <a class="btn btn-primary" id="cartCheckout" href="<?php echo $grd_asset_prefix; ?>checkout.php" style="width:100%;justify-content:center;">Checkout</a>
   </div>
 </aside>
 
@@ -95,6 +95,9 @@
   <span id="toastMsg">Added to cart</span>
 </div>
 
-<script src="js/main.js"></script>
+<script>
+  window.GRD_API_PREFIX = <?php echo json_encode($grd_asset_prefix); ?>;
+</script>
+<script src="<?php echo $grd_asset_prefix; ?>js/main.js"></script>
 </body>
 </html>

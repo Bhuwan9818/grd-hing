@@ -1,235 +1,244 @@
 <?php
 require_once __DIR__ . '/includes/product-data.php';
 require_once __DIR__ . '/includes/helpers.php';
+
 $products = grd_get_products();
-$featured = $products[0];
-$others   = array_slice($products, 1);
+$flagship = null;
+foreach ($products as $p) {
+    if ($p['badge'] === 'Bestseller') { $flagship = $p; break; }
+}
+if (!$flagship && $products) { $flagship = $products[0]; }
+
+$page_title = 'G.R.D Hing — Bandhani Hing Churan | Pure, Plant-Based Asafoetida';
+$page_description = 'G.R.D Hing brings authentic Bandhani hing churan to your kitchen — plant-based, additive-free, and ground for real Indian cooking.';
 require __DIR__ . '/includes/header.php';
 ?>
 
 <main id="top">
 
-  <!-- ============================= HERO ============================= -->
+  <!-- ================= HERO ================= -->
   <section class="hero">
-    <div class="powder-scatter" aria-hidden="true">
-      <span style="width:120px;height:120px;top:6%;left:2%;"></span>
-      <span style="width:60px;height:60px;top:70%;left:6%;"></span>
-      <span style="width:40px;height:40px;top:40%;left:1%;"></span>
-    </div>
     <div class="container">
       <div class="hero-copy reveal">
-        <span class="eyebrow">Authentic Bandhani Hing</span>
-        <h1>One Pinch Of <em>Real</em> Hing Changes The Dish</h1>
-        <p class="lede">G.R.D Bandhani Hing Churan is milled the traditional way — pure, plant-based, and strong enough that a single pinch carries the whole tadka. No fillers, no shortcuts.</p>
+        <span class="eyebrow">Panditji Hing Kayam</span>
+        <h1>Real <em>Bandhani</em> Hing, Ground The Traditional Way</h1>
+        <p class="lede">Pure, plant-based asafoetida — hand-blended in small batches using a Rajasthani recipe passed down through generations. One pinch is all a proper dal ever needed.</p>
         <div class="hero-cta">
-          <a href="#shop" class="btn btn-primary">Shop Hing Churan</a>
-          <a href="#kitchen" class="btn btn-ghost">See It In A Dal</a>
+          <a href="#shop" class="btn btn-primary">Shop The Collection</a>
+          <a href="#story" class="btn btn-ghost">Our Story</a>
         </div>
         <div class="hero-stats">
           <div class="stat"><b>100%</b><span>Plant-Based</span></div>
-          <div class="stat"><b>Zero</b><span>Artificial Fillers</span></div>
-          <div class="stat"><b>1 Pinch</b><span>Is Enough</span></div>
+          <div class="stat"><b>0</b><span>Artificial Additives</span></div>
+          <div class="stat"><b>5000+</b><span>Kitchens Trust Us</span></div>
         </div>
       </div>
       <div class="hero-visual reveal">
         <div class="hero-jar-wrap">
-          <img src="images/jar-hero-banner.webp" alt="G.R.D Bandhani Hing Churan jar, 100g">
-          <div class="hero-stamp"><?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.6H21l-5.4 4 2.1 6.6L12 15.8 6.3 19.2l2.1-6.6L3 8.6h6.6z"/></svg>', 8); ?></div>
+          <img src="images/jar-hero.png" alt="G.R.D Hing — Bandhani Hing Churan jar">
+        </div>
+        <div class="hero-stamp">
+          <?php echo grd_seal('<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>'); ?>
+        </div>
+        <div class="powder-scatter" aria-hidden="true">
+          <span style="width:10px;height:10px;top:14%;left:12%;"></span>
+          <span style="width:6px;height:6px;top:68%;left:8%;"></span>
+          <span style="width:14px;height:14px;top:78%;left:80%;"></span>
+          <span style="width:8px;height:8px;top:22%;left:86%;"></span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============================= TRUST STRIP ============================= -->
+  <!-- ================= TRUST STRIP ================= -->
   <section class="trust">
-    <div class="container trust-grid stagger">
+    <div class="container trust-grid">
       <div class="trust-item reveal">
-        <?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4.5 8-11.8A8 8 0 0 0 4 10.2C4 17.5 12 22 12 22z"/><path d="M12 15a4 4 0 0 0 4-4c-2.5 0-4 1-4 4z"/></svg>'); ?>
-        <div><h4>Pure &amp; Plant-Based</h4><p>No fillers, only real hing resin.</p></div>
+        <?php echo grd_seal('<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>', 5); ?>
+        <div><h4>Small-Batch Blended</h4><p>Ground fresh in limited batches, never mass-produced.</p></div>
       </div>
       <div class="trust-item reveal">
-        <?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6l1 5-4 4-4-4z"/><path d="M7 12l-3 7a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-3-7"/><line x1="16" y1="17" x2="16.01" y2="17"/></svg>'); ?>
-        <div><h4>No Artificial Additives</h4><p>Nothing synthetic, ever added.</p></div>
+        <?php echo grd_seal('<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>', 5); ?>
+        <div><h4>No Artificial Additives</h4><p>Just resin, gum arabic, wheat flour, and edible oil.</p></div>
       </div>
       <div class="trust-item reveal">
-        <?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18c-1-3 1-4 0-7-1 3-3 3-3 6a3 3 0 0 0 6 0c0-4-3-4-2-9 2 2 4 5 4 9a5 5 0 0 1-5 5"/></svg>'); ?>
-        <div><h4>Strong, Honest Aroma</h4><p>A pinch carries the whole pot.</p></div>
+        <?php echo grd_seal('<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8 12 14.7l-3-3L4 16.7"/></svg>', 5); ?>
+        <div><h4>Strong, Honest Aroma</h4><p>A single pinch carries an entire pot of dal.</p></div>
       </div>
       <div class="trust-item reveal">
-        <?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19h16"/><path d="M6 19V9a2 2 0 0 1 2-2h1"/><path d="M18 19V9a2 2 0 0 0-2-2h-1"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>'); ?>
-        <div><h4>Built For Indian Kitchens</h4><p>Balanced for dal, sabzi &amp; tadka.</p></div>
+        <?php echo grd_seal('<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>', 5); ?>
+        <div><h4>Delivered To Your Door</h4><p>Cash on delivery, shipped straight from Delhi NCR.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- ============================= SHOP ============================= -->
+  <!-- ================= SHOP ================= -->
   <section class="section" id="shop">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">Our Collection</span>
-        <h2>Every Jar, Ground With Intent</h2>
-        <p>One churan, sized for how you cook — from a trial jar to the one that lives on your counter every day. Whole hing dana too, for those who grind their own.</p>
+        <span class="eyebrow">Shop The Collection</span>
+        <h2>Every Jar Ground With The Same Care</h2>
+        <p>From the everyday kitchen jar to the smallest trial pack — every size is the same Bandhani-style blend, just sized differently.</p>
       </div>
 
+      <?php if ($flagship): ?>
       <div class="featured-card reveal">
         <div class="featured-media">
-          <span class="ribbon"><?php echo htmlspecialchars($featured['badge']); ?></span>
-          <a href="product.php?id=<?php echo urlencode($featured['id']); ?>">
-            <img src="<?php echo htmlspecialchars($featured['image']); ?>" alt="<?php echo htmlspecialchars($featured['name']); ?> jar">
-          </a>
+          <span class="ribbon">Bestseller</span>
+          <img src="<?php echo htmlspecialchars($flagship['image']); ?>" alt="<?php echo htmlspecialchars($flagship['name']); ?>">
         </div>
         <div class="featured-body">
-          <span class="eyebrow">Flagship Product</span>
-          <a href="product.php?id=<?php echo urlencode($featured['id']); ?>" class="featured-title-link"><h3><?php echo htmlspecialchars($featured['name']); ?></h3></a>
-          <p class="desc"><?php echo htmlspecialchars($featured['tagline']); ?> Hand-blended in small batches and packed while the aroma is at its peak — this is the jar that started G.R.D.</p>
+          <span class="eyebrow">Flagship Jar</span>
+          <a href="product.php?id=<?php echo (int)$flagship['id']; ?>" class="featured-title-link"><h3><?php echo htmlspecialchars($flagship['name']); ?> — <?php echo htmlspecialchars($flagship['weight']); ?></h3></a>
+          <p class="desc"><?php echo htmlspecialchars($flagship['tagline']); ?></p>
           <div class="price-row">
-            <span class="price">₹<?php echo $featured['price']; ?></span>
-            <?php if ($featured['mrp'] > $featured['price']): ?>
-              <span class="mrp">₹<?php echo $featured['mrp']; ?></span>
-              <span class="save">Save <?php echo round((1 - $featured['price']/$featured['mrp'])*100); ?>%</span>
-            <?php else: ?>
-              <span class="save">MRP · <?php echo htmlspecialchars($featured['weight']); ?></span>
+            <span class="price">₹<?php echo number_format($flagship['price'], 0); ?></span>
+            <?php if ($flagship['mrp'] > $flagship['price']): ?>
+              <span class="mrp">₹<?php echo number_format($flagship['mrp'], 0); ?></span>
+              <span class="save">Save <?php echo round((1 - $flagship['price'] / $flagship['mrp']) * 100); ?>%</span>
             <?php endif; ?>
           </div>
           <div class="featured-actions">
-            <div class="qty-select">
-              <button type="button" class="qty-minus" aria-label="Decrease quantity">–</button>
-              <span class="qty-val">1</span>
-              <button type="button" class="qty-plus" aria-label="Increase quantity">+</button>
-            </div>
-            <button class="btn btn-primary add-to-cart" data-name="<?php echo htmlspecialchars($featured['name']); ?>" data-weight="<?php echo htmlspecialchars($featured['weight']); ?>" data-price="<?php echo $featured['price']; ?>" data-color="<?php echo htmlspecialchars($featured['jar_color']); ?>" data-image="<?php echo htmlspecialchars($featured['image']); ?>">Add To Cart</button>
-            <a href="product.php?id=<?php echo urlencode($featured['id']); ?>" class="btn btn-ghost-dark">View Details</a>
+            <button
+              class="btn btn-primary add-to-cart"
+              data-id="<?php echo (int)$flagship['id']; ?>"
+              data-name="<?php echo htmlspecialchars($flagship['name']); ?>"
+              data-weight="<?php echo htmlspecialchars($flagship['weight']); ?>"
+              data-price="<?php echo $flagship['price']; ?>"
+              data-color="<?php echo htmlspecialchars($flagship['jar_color']); ?>"
+              data-image="<?php echo htmlspecialchars($flagship['image']); ?>"
+            >Add To Cart</button>
+            <a href="product.php?id=<?php echo (int)$flagship['id']; ?>" class="btn btn-ghost-dark">View Details</a>
           </div>
         </div>
       </div>
+      <?php endif; ?>
 
-      <div class="product-grid stagger">
-        <?php foreach ($others as $p): ?>
+      <div class="product-grid">
+        <?php foreach ($products as $p): ?>
           <?php echo grd_product_card($p); ?>
         <?php endforeach; ?>
       </div>
     </div>
   </section>
 
-  <!-- ============================= PROVENANCE / PROCESS ============================= -->
-  <section class="section provenance" id="story">
+  <!-- ================= OUR PROCESS ================= -->
+  <section class="section" id="story" style="padding-top:0;">
     <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">Our Process</span>
-        <h2>From Resin To Jar, Nothing Rushed</h2>
-        <p>Bandhani hing isn't a shortcut spice — it's a craft passed down through generations of blenders. Here's what actually goes into the jar.</p>
+      <div class="section-head center reveal">
+        <span class="eyebrow">From Resin To Jar</span>
+        <h2>Traceable, Start To Finish</h2>
+        <p>Real Bandhani hing takes four honest steps — no shortcuts, no fillers beyond what the traditional recipe calls for.</p>
       </div>
-
-      <div class="process-row stagger">
+      <div class="process-row">
         <div class="process-step reveal">
           <span class="process-num">01</span>
-          <h3>Sourced At The Root</h3>
-          <p>Resin tapped from Ferula roots grown in the cold highlands where the plant's aroma is strongest — the only place real hing comes from.</p>
+          <h3>Sourcing The Resin</h3>
+          <p>Raw asafoetida resin is sourced from trusted growers, chosen for aroma strength and purity.</p>
         </div>
         <div class="process-step reveal">
           <span class="process-num">02</span>
-          <h3>Cut The Bandhani Way</h3>
-          <p>Aged resin is blended by hand using the traditional Rajasthani method — just enough carrier, never stretched further to cut cost.</p>
+          <h3>Bandhani-Style Blending</h3>
+          <p>Blended by hand using the traditional Rajasthani method our family has followed for generations.</p>
         </div>
         <div class="process-step reveal">
           <span class="process-num">03</span>
-          <h3>Stone-Ground, Small Batch</h3>
-          <p>Milled in batches small enough that no jar sits waiting in a warehouse losing its aroma before it reaches you.</p>
+          <h3>Stone-Grinding</h3>
+          <p>Ground slowly on stone to protect the aroma, instead of fast machine milling that burns it off.</p>
         </div>
         <div class="process-step reveal">
           <span class="process-num">04</span>
-          <h3>Sealed At Peak Aroma</h3>
-          <p>Packed within days of grinding, so what opens in your kitchen is as strong as the day it was milled.</p>
+          <h3>Sealing At Peak Aroma</h3>
+          <p>Packed the moment it's ready, so the jar that reaches you smells exactly as strong as the day it was made.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============================= BENEFITS ============================= -->
+  <!-- ================= BENEFITS ================= -->
   <section class="section benefits" id="benefits">
     <div class="container">
       <div class="section-head center reveal">
-        <span class="eyebrow">Why Hing, Why G.R.D</span>
-        <h2>Good For The Pot. Good For The Gut.</h2>
-        <p>Hing has been a staple of Indian digestion-friendly cooking for generations — here's what a pinch is actually doing.</p>
+        <span class="eyebrow">Why Real Hing Matters</span>
+        <h2>More Than Just A Kitchen Staple</h2>
+        <p>Bandhani hing has been used in Indian kitchens for its flavour and its digestive benefits for centuries.</p>
       </div>
-      <div class="benefit-grid stagger">
+      <div class="benefit-grid">
         <div class="benefit-item reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3a5 5 0 0 0-5 5c0 6 5 8 9 13 4-5 9-7 9-13a5 5 0 0 0-8-4"/></svg>
-          <h4>Improves Digestive Health</h4>
-          <p>A traditional aid for heavy, oily meals.</p>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+          <h4>Aids Digestion</h4>
+          <p>A traditional aid for bloating and digestive comfort after a heavy meal.</p>
         </div>
         <div class="benefit-item reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 3h6l1 5-4 4-4-4z"/><path d="M7 12l-3 7a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-3-7"/></svg>
-          <h4>Relieves Gas &amp; Acidity</h4>
-          <p>Used for generations to settle the stomach.</p>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <h4>Onion-Garlic Alternative</h4>
+          <p>A staple substitute in Jain and satvik cooking for depth without onion or garlic.</p>
         </div>
         <div class="benefit-item reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4.5 8-11.8A8 8 0 0 0 4 10.2C4 17.5 12 22 12 22z"/></svg>
-          <h4>Natural Antibacterial Properties</h4>
-          <p>Prized in Ayurveda for its resin compounds.</p>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          <h4>Goes Further</h4>
+          <p>A single pinch in hot ghee is enough to season an entire pot — no over-pouring needed.</p>
         </div>
         <div class="benefit-item reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0z"/><path d="M12 8v4l3 2"/></svg>
-          <h4>Supports Gut Health</h4>
-          <p>A gentle, everyday aid to digestion.</p>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12h8M12 8v8"/></svg>
+          <h4>No Fillers, No Guesswork</h4>
+          <p>Just resin, gum arabic, wheat flour, and edible oil — nothing hidden on the label.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============================= LIFESTYLE / KITCHEN ============================= -->
+  <!-- ================= KITCHEN / LIFESTYLE ================= -->
   <section class="section lifestyle" id="kitchen">
     <div class="container">
       <div class="lifestyle-media reveal">
-        <img src="images/lifestyle-dal.webp" alt="Dal, roti and rice made with G.R.D Hing Churan">
+        <img src="images/lifestyle-dal.png" alt="A pot of dal tempered with G.R.D Hing">
       </div>
       <div class="lifestyle-copy reveal">
-        <span class="eyebrow">From Our Kitchen</span>
-        <h2>The Same Pinch, Every Dal, Every Time</h2>
-        <p>Drop it into hot ghee before the dal hits the pan and the whole kitchen knows dinner's close. That's the test we hold every batch to.</p>
+        <span class="eyebrow">In Your Kitchen</span>
+        <h2>Built For Everyday Cooking, Not Just Special Occasions</h2>
+        <p>Bandhani hing churan is at its best the moment it hits hot ghee — that first sizzle is the tell. Here's where a pinch makes the biggest difference.</p>
         <ul class="recipe-list">
-          <li><span class="mark">1</span> Heat ghee, add cumin till it crackles.</li>
-          <li><span class="mark">2</span> Add a pinch of Bandhani Hing Churan off the heat.</li>
-          <li><span class="mark">3</span> Pour over simmered dal and finish with coriander.</li>
+          <li><span class="mark">✓</span> Tadka for dal, sambar, and kadhi</li>
+          <li><span class="mark">✓</span> Sabzi and curry bases, right after the cumin seeds crackle</li>
+          <li><span class="mark">✓</span> Pickles and papad, for that unmistakable tang</li>
+          <li><span class="mark">✓</span> Jain and satvik dishes, as an onion-garlic replacement</li>
         </ul>
-        <div class="hero-cta" style="margin-top:30px;">
-          <a href="#shop" class="btn btn-primary">Get The Jar</a>
-        </div>
+        <a href="#shop" class="btn btn-primary" style="margin-top:30px;">Shop The Collection</a>
       </div>
     </div>
   </section>
 
-  <!-- ============================= TESTIMONIALS ============================= -->
+  <!-- ================= TESTIMONIALS ================= -->
   <section class="testimonials" id="reviews">
     <div class="container">
       <div class="section-head center reveal">
         <span class="eyebrow">From Real Kitchens</span>
-        <h2>What Home Cooks Are Saying</h2>
+        <h2>What People Are Saying</h2>
       </div>
-      <div class="testi-grid stagger">
+      <div class="testi-grid">
         <div class="testi-card reveal">
-          <?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.5 9.5C7.5 7 9 5.5 11.5 5.5v2c-1.4 0-2 .7-2 1.8h2V13H7.5V9.5zm8 0c0-2.5 1.5-4 4-4v2c-1.4 0-2 .7-2 1.8h2V13h-4V9.5z"/></svg>', 4); ?>
-          <p>"The aroma hits the second the lid opens. I've cut the quantity I use in half compared to my old brand."</p>
+          <?php echo grd_seal('', 4); ?>
+          <p>"The aroma hit the moment I opened the jar — nothing like the hing I used to buy from the supermarket. One pinch and the whole kitchen smells like my grandmother's."</p>
           <div class="testi-who">
             <div class="testi-avatar">R</div>
-            <div><b>Radhika M.</b><span>Home Cook, Jaipur</span></div>
+            <div><b>Ritu Malhotra</b><span>Home Cook, Delhi</span></div>
           </div>
         </div>
         <div class="testi-card reveal">
-          <?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.5 9.5C7.5 7 9 5.5 11.5 5.5v2c-1.4 0-2 .7-2 1.8h2V13H7.5V9.5zm8 0c0-2.5 1.5-4 4-4v2c-1.4 0-2 .7-2 1.8h2V13h-4V9.5z"/></svg>', 4); ?>
-          <p>"No weird chemical smell like some hing I've bought before. This one actually tastes like the hing my grandmother used."</p>
+          <?php echo grd_seal('', 4); ?>
+          <p>"I switched to G.R.D Hing for our Jain thali prep and haven't looked back. Strong, consistent, and it never clumps in the jar like other brands."</p>
           <div class="testi-who">
             <div class="testi-avatar">S</div>
-            <div><b>Sanjay T.</b><span>Home Cook, Delhi</span></div>
+            <div><b>Suresh Jain</b><span>Restaurant Owner</span></div>
           </div>
         </div>
         <div class="testi-card reveal">
-          <?php echo grd_seal('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.5 9.5C7.5 7 9 5.5 11.5 5.5v2c-1.4 0-2 .7-2 1.8h2V13H7.5V9.5zm8 0c0-2.5 1.5-4 4-4v2c-1.4 0-2 .7-2 1.8h2V13h-4V9.5z"/></svg>', 4); ?>
-          <p>"Ordered it for my mother-in-law's dal recipe and now it's the only hing allowed in the house."</p>
+          <?php echo grd_seal('', 4); ?>
+          <p>"Ordered the trial pack out of curiosity and ended up buying the 100g jar the same week. This is what real hing is supposed to taste like."</p>
           <div class="testi-who">
             <div class="testi-avatar">P</div>
-            <div><b>Priya K.</b><span>Home Cook, Lucknow</span></div>
+            <div><b>Priya Nair</b><span>Home Cook, Gurgaon</span></div>
           </div>
         </div>
       </div>
